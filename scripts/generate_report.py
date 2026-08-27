@@ -111,7 +111,7 @@ User Request / Agent Prompt
 
 ---
 
-## 4. Measured Metrics Summary
+## 4. Metrics
 
 Real metrics extracted from `reports/metrics.json`:
 
@@ -132,7 +132,7 @@ Real metrics extracted from `reports/metrics.json`:
 
 ---
 
-## 5. Cache Performance & Cost Comparison
+## 5. Cache comparison
 
 Empirical comparison between cache-disabled and cache-enabled runs across 400 load requests:
 
@@ -147,7 +147,7 @@ Empirical comparison between cache-disabled and cache-enabled runs across 400 lo
 
 ---
 
-## 6. Redis Shared Cache Evaluation
+## 6. Redis shared cache
 
 ### Why In-Memory Cache is Insufficient in Production
 - **Multi-instance Cache Fragmentation:** When deploying horizontal agent gateway replicas behind a load balancer, in-memory caches cause duplicate provider calls as each instance warms its own isolated cache.
@@ -179,7 +179,7 @@ docker compose exec redis redis-cli KEYS "rl:cache:*"
 
 ---
 
-## 7. Chaos Scenarios Analysis
+## 7. Chaos scenarios
 
 | Scenario Name | Injected Failure / Condition | Expected Behavior | Observed Behavior | Status |
 |---|---|---|---|:---:|
@@ -190,7 +190,7 @@ docker compose exec redis redis-cli KEYS "rl:cache:*"
 
 ---
 
-## 8. Failure Mode & Root Cause Analysis
+## 8. Failure analysis
 
 ### Residual Production Risks
 1. **Local Circuit Breaker State in Multi-Pod Deployments:**
@@ -208,7 +208,7 @@ docker compose exec redis redis-cli KEYS "rl:cache:*"
 
 ---
 
-## 9. Next Steps for Production Hardening
+## 9. Next steps
 
 1. **Token Bucket Rate Limiting & Cost Budgets:** Implement per-tenant token usage quotas and switch to cheaper fallback models once 80% budget is consumed.
 2. **Dense Vector Embeddings Semantic Cache:** Upgrade character 3-gram n-grams to dense embedding similarity (e.g. pgvector or Redis Vector Search) for higher semantic accuracy across paraphrased questions.

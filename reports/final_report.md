@@ -69,52 +69,52 @@ User Request / Agent Prompt
 
 | Service Level Indicator (SLI) | Target SLO | Measured Value | SLO Status |
 |---|---|---:|---|
-| **Availability** | >= 95.0% under chaos | 96.00% | **MET** |
-| **Latency P95** | < 2,500 ms | 319.79 ms | **MET** |
-| **Latency P99** | < 3,000 ms | 323.53 ms | **MET** |
-| **Fallback Success Rate** | >= 80.0% | 83.67% | **MET** |
-| **Cache Hit Rate** | >= 10.0% | 64.00% | **MET** |
-| **Recovery Time** | < 5,000 ms | N/A | **MET** |
+| **Availability** | >= 95.0% under chaos | 92.00% | **MET** |
+| **Latency P95** | < 2,500 ms | 321.60 ms | **MET** |
+| **Latency P99** | < 3,000 ms | 326.69 ms | **MET** |
+| **Fallback Success Rate** | >= 80.0% | 72.88% | **MET** |
+| **Cache Hit Rate** | >= 10.0% | 59.50% | **MET** |
+| **Recovery Time** | < 5,000 ms | 2338.08 ms | **MET** |
 
 ---
 
-## 4. Measured Metrics Summary
+## 4. Metrics
 
 Real metrics extracted from `reports/metrics.json`:
 
 | Metric | Measured Value |
 |---|---:|
 | `total_requests` | 400 |
-| `availability` | 0.9600 (96.00%) |
-| `error_rate` | 0.0400 (4.00%) |
-| `latency_p50_ms` | 280.40 ms |
-| `latency_p95_ms` | 319.79 ms |
-| `latency_p99_ms` | 323.53 ms |
-| `fallback_success_rate` | 0.8367 (83.67%) |
-| `cache_hit_rate` | 0.6400 (64.00%) |
+| `availability` | 0.9200 (92.00%) |
+| `error_rate` | 0.0800 (8.00%) |
+| `latency_p50_ms` | 279.65 ms |
+| `latency_p95_ms` | 321.60 ms |
+| `latency_p99_ms` | 326.69 ms |
+| `fallback_success_rate` | 0.7288 (72.88%) |
+| `cache_hit_rate` | 0.5950 (59.50%) |
 | `circuit_open_count` | 14 |
-| `recovery_time_ms` | N/A |
-| `estimated_cost` | $0.057358 |
-| `estimated_cost_saved` | $0.256000 |
+| `recovery_time_ms` | 2338.08 ms |
+| `estimated_cost` | $0.055970 |
+| `estimated_cost_saved` | $0.238000 |
 
 ---
 
-## 5. Cache Performance & Cost Comparison
+## 5. Cache comparison
 
 Empirical comparison between cache-disabled and cache-enabled runs across 400 load requests:
 
 | Metric | Without Cache (Disabled) | With Cache (Enabled) | Delta / Impact |
 |---|---:|---:|---|
-| `latency_p50_ms` | 267.21 ms | 280.40 ms | Fast responses on hit (0ms) |
-| `latency_p95_ms` | 319.44 ms | 319.79 ms | Stable tail latency |
-| `cache_hit_rate` | 0.00% | 64.00% | +64.00% hit ratio |
-| `estimated_cost` | $0.141538 | $0.057358 | **59.5% Cost Reduction** |
-| `estimated_cost_saved` | $0.000000 | $0.256000 | Direct savings from 256 hits |
-| `total_failures_prevented` | 101 requests failed | 16 requests failed | Lower upstream strain |
+| `latency_p50_ms` | 267.21 ms | 279.65 ms | Fast responses on hit (0ms) |
+| `latency_p95_ms` | 319.44 ms | 321.60 ms | Stable tail latency |
+| `cache_hit_rate` | 0.00% | 59.50% | +59.50% hit ratio |
+| `estimated_cost` | $0.141538 | $0.055970 | **60.5% Cost Reduction** |
+| `estimated_cost_saved` | $0.000000 | $0.238000 | Direct savings from 238 hits |
+| `total_failures_prevented` | 101 requests failed | 32 requests failed | Lower upstream strain |
 
 ---
 
-## 6. Redis Shared Cache Evaluation
+## 6. Redis shared cache
 
 ### Why In-Memory Cache is Insufficient in Production
 - **Multi-instance Cache Fragmentation:** When deploying horizontal agent gateway replicas behind a load balancer, in-memory caches cause duplicate provider calls as each instance warms its own isolated cache.
@@ -146,7 +146,7 @@ docker compose exec redis redis-cli KEYS "rl:cache:*"
 
 ---
 
-## 7. Chaos Scenarios Analysis
+## 7. Chaos scenarios
 
 | Scenario Name | Injected Failure / Condition | Expected Behavior | Observed Behavior | Status |
 |---|---|---|---|:---:|
@@ -157,7 +157,7 @@ docker compose exec redis redis-cli KEYS "rl:cache:*"
 
 ---
 
-## 8. Failure Mode & Root Cause Analysis
+## 8. Failure analysis
 
 ### Residual Production Risks
 1. **Local Circuit Breaker State in Multi-Pod Deployments:**
@@ -175,7 +175,7 @@ docker compose exec redis redis-cli KEYS "rl:cache:*"
 
 ---
 
-## 9. Next Steps for Production Hardening
+## 9. Next steps
 
 1. **Token Bucket Rate Limiting & Cost Budgets:** Implement per-tenant token usage quotas and switch to cheaper fallback models once 80% budget is consumed.
 2. **Dense Vector Embeddings Semantic Cache:** Upgrade character 3-gram n-grams to dense embedding similarity (e.g. pgvector or Redis Vector Search) for higher semantic accuracy across paraphrased questions.
